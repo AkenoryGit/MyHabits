@@ -10,6 +10,7 @@ import UIKit
 class ProgressCollectionViewCell: UICollectionViewCell {
     
     @IBOutlet weak var titleLabel: UILabel!
+    @IBOutlet weak var progressView: UIProgressView!
     
     func configure() {
         titleLabel.text = "Прогресс дня"
