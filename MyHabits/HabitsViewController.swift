@@ -31,7 +31,9 @@ class HabitsViewController: UIViewController, UICollectionViewDataSource, UIColl
             cell.configure()
             return cell
         } else {
-            return collectionView.dequeueReusableCell(withReuseIdentifier: "HabitCollectionViewCell", for: indexPath)
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "HabitCollectionViewCell", for: indexPath) as! HabitCollectionViewCell
+            cell.configure()
+            return cell
         }
     }
     

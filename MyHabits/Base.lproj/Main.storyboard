@@ -80,12 +80,54 @@
                                         </connections>
                                     </collectionViewCell>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="HabitCollectionViewCell" id="E6E-NE-6g4" customClass="HabitCollectionViewCell" customModule="MyHabits" customModuleProvider="target">
-                                        <rect key="frame" x="16.666666666666668" y="90" width="360" height="80"/>
+                                        <rect key="frame" x="16.666666666666668" y="90" width="360" height="200"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="arf-cx-54Q">
-                                            <rect key="frame" x="0.0" y="0.0" width="360" height="80"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="360" height="200"/>
                                             <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Название привычки" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="l5g-sg-F4C">
+                                                    <rect key="frame" x="12" y="20" width="160" height="21"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Время" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="l4f-xp-COV">
+                                                    <rect key="frame" x="11.999999999999996" y="159" width="51.666666666666657" height="21"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Счётчик" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="S0a-bH-JZ9">
+                                                    <rect key="frame" x="12" y="57" width="66" height="21"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZAT-pV-SsL">
+                                                    <rect key="frame" x="316" y="93" width="24" height="14"/>
+                                                    <state key="normal" title="Button"/>
+                                                    <buttonConfiguration key="configuration" style="plain"/>
+                                                </button>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="S0a-bH-JZ9" firstAttribute="leading" secondItem="arf-cx-54Q" secondAttribute="leading" constant="12" id="1Sh-ny-vYW"/>
+                                                <constraint firstItem="l5g-sg-F4C" firstAttribute="top" secondItem="arf-cx-54Q" secondAttribute="top" constant="20" id="2zs-vm-fZ5"/>
+                                                <constraint firstAttribute="trailing" secondItem="ZAT-pV-SsL" secondAttribute="trailing" constant="20" id="A4w-Ci-Phd"/>
+                                                <constraint firstAttribute="bottom" secondItem="l4f-xp-COV" secondAttribute="bottom" constant="20" id="Jjk-zd-9jk"/>
+                                                <constraint firstItem="ZAT-pV-SsL" firstAttribute="centerY" secondItem="arf-cx-54Q" secondAttribute="centerY" id="eOE-3z-LhT"/>
+                                                <constraint firstItem="l4f-xp-COV" firstAttribute="leading" secondItem="arf-cx-54Q" secondAttribute="leading" constant="12" id="gio-Bn-mLW"/>
+                                                <constraint firstItem="S0a-bH-JZ9" firstAttribute="top" secondItem="l5g-sg-F4C" secondAttribute="bottom" constant="16" id="iSG-fg-pO7"/>
+                                                <constraint firstItem="l5g-sg-F4C" firstAttribute="leading" secondItem="arf-cx-54Q" secondAttribute="leading" constant="12" id="twf-5A-xzq"/>
+                                            </constraints>
                                         </collectionViewCellContentView>
+                                        <size key="customSize" width="360" height="200"/>
+                                        <connections>
+                                            <outlet property="checkmarkButton" destination="ZAT-pV-SsL" id="3p4-uy-6Wk"/>
+                                            <outlet property="counterLabel" destination="S0a-bH-JZ9" id="9CK-3D-cbN"/>
+                                            <outlet property="timeLabel" destination="l4f-xp-COV" id="JtP-VQ-foV"/>
+                                            <outlet property="titleLabel" destination="l5g-sg-F4C" id="miy-8T-Cfo"/>
+                                        </connections>
                                     </collectionViewCell>
                                 </cells>
                             </collectionView>
