@@ -9,24 +9,40 @@ import UIKit
 
 class HabitCollectionViewCell: UICollectionViewCell {
     
-    var onCheckmarkTapped: (() -> Void)?
-    private var habit: Habit?
-    private var habitIndex: Int?
-    
+    // MARK: - IBOutlets
+
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var counterLabel: UILabel!
     @IBOutlet weak var timeLabel: UILabel!
     @IBOutlet weak var checkmarkButton: UIButton!
     
-    func configure(at index: Int) {
-        let habit = HabitsStore.shared.habits[index]
-        self.habitIndex = index
+    // MARK: - Properties
+
+    var onCheckmarkTapped: (() -> Void)?
+    private var habit: Habit?
+    private var habitIndex: Int?
+    
+    // MARK: - Lifecycle
+
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        habit = nil
+        habitIndex = nil
+        checkmarkButton.setImage(nil, for: .normal)
+    }
+
+    // MARK: - Configuration
+
+    func configure(with habit: Habit, index: Int) {
         self.habit = habit
-        
+        self.habitIndex = index
+
         titleLabel.text = habit.name
         titleLabel.textColor = habit.color
         titleLabel.font = UIFont.systemFont(ofSize: 17, weight: .semibold)
-        
+        titleLabel.numberOfLines = 2
+        titleLabel.lineBreakMode = .byTruncatingTail
+
         timeLabel.text = habit.dateString
         timeLabel.textColor = .gray
         timeLabel.font = UIFont.systemFont(ofSize: 12, weight: .regular)
@@ -36,9 +52,11 @@ class HabitCollectionViewCell: UICollectionViewCell {
         counterLabel.font = UIFont.systemFont(ofSize: 14, weight: .regular)
 
         let checkmarkImage = habit.isAlreadyTakenToday ? "checkmark.circle.fill" : "circle"
-        checkmarkButton.setImage(UIImage(systemName: checkmarkImage), for: .normal)
+        let config = UIImage.SymbolConfiguration(pointSize: 26, weight: .regular)
+        let image = UIImage(systemName: checkmarkImage, withConfiguration: config)
+        checkmarkButton.setImage(image, for: .normal)
         checkmarkButton.tintColor = habit.color
-        
+
         contentView.backgroundColor = .white
         contentView.layer.cornerRadius = 8
         contentView.layer.masksToBounds = true
@@ -50,6 +68,9 @@ class HabitCollectionViewCell: UICollectionViewCell {
         layer.masksToBounds = false
     }
     
+    // MARK: - Actions
+
+    /// Вызывается при нажатии на кнопку галочки
     @IBAction func checkmarkTapped(_ sender: UIButton) {
         guard let index = habitIndex else { return }
 
@@ -63,8 +84,7 @@ class HabitCollectionViewCell: UICollectionViewCell {
         }
 
         HabitsStore.shared.save()
-        configure(at: index)
-        
+        configure(with: habit, index: index)
         onCheckmarkTapped?()
     }
 }

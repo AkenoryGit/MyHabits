@@ -7,30 +7,40 @@
 
 import UIKit
 
-class ProgressCollectionViewCell: UICollectionViewCell {
-    
-    @IBOutlet weak var titleLabel: UILabel!
-    @IBOutlet weak var progressView: UIProgressView!
-    @IBOutlet weak var percentLabel: UILabel!
-    
-    func configure() {
-        titleLabel.text = "Прогресс дня"
-        titleLabel.textColor = UIColor.gray
-        
-        percentLabel.textColor = UIColor.gray
-        
-        let progress = HabitsStore.shared.todayProgress
-        progressView.setProgress(progress, animated: true)
-        
-        let percent = Int(progress * 100)
-        percentLabel.text = "\(percent)%"
-    }
-    
+final class ProgressCollectionViewCell: UICollectionViewCell {
+
+    // MARK: - Outlets
+
+    @IBOutlet private weak var titleLabel: UILabel!
+    @IBOutlet private weak var progressView: UIProgressView!
+    @IBOutlet private weak var percentLabel: UILabel!
+
+    // MARK: - Lifecycle
+
     override func awakeFromNib() {
         super.awakeFromNib()
+        configureAppearance()
+    }
 
+    // MARK: - Public Methods
+
+    func configure() {
+        let progress = HabitsStore.shared.todayProgress
+        let percent = Int(progress * 100)
+
+        titleLabel.text = "Прогресс дня"
+        titleLabel.textColor = .gray
+
+        percentLabel.text = "\(percent)%"
+        percentLabel.textColor = .gray
+
+        progressView.setProgress(progress, animated: true)
+    }
+
+    // MARK: - Private Methods
+
+    private func configureAppearance() {
         contentView.backgroundColor = .white
-        
         contentView.layer.cornerRadius = 8
         contentView.layer.masksToBounds = true
 

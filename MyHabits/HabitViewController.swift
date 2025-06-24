@@ -7,18 +7,77 @@
 
 import UIKit
 
-class HabitViewController: UIViewController {
-    
+final class HabitViewController: UIViewController {
+
+    // MARK: - Public Properties
+
     var selectedColor: UIColor = UIColor(named: "PurpleMain") ?? .blue
     var habitToEdit: Habit?
-    
-    @objc private func hideKeyboard() {
-        view.endEditing(true)
-    }
+
+    // MARK: - Outlets
 
     @IBOutlet weak var nameTextField: UITextField!
+    @IBOutlet weak var timeLabel: UILabel!
+    @IBOutlet weak var datePicker: UIDatePicker!
+    @IBOutlet weak var colorButton: UIButton!
     @IBOutlet weak var deleteButton: UIButton!
-    
+
+    // MARK: - Lifecycle
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        setupGestureToHideKeyboard()
+        configureUI()
+        configureViewForHabit()
+    }
+
+    // MARK: - Setup
+
+    private func setupGestureToHideKeyboard() {
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(hideKeyboard))
+        view.addGestureRecognizer(tapGesture)
+    }
+
+    private func configureUI() {
+        view.backgroundColor = .systemBackground
+
+        nameTextField.layer.cornerRadius = 8
+        nameTextField.layer.borderWidth = 1
+        nameTextField.layer.borderColor = UIColor.gray.cgColor
+
+        deleteButton.isHidden = habitToEdit == nil
+    }
+
+    private func configureViewForHabit() {
+        if let habit = habitToEdit {
+            navigationItem.title = "Править"
+            nameTextField.text = habit.name
+            datePicker.date = habit.date
+            selectedColor = habit.color
+        } else {
+            navigationItem.title = "Создать"
+            datePicker.date = Date()
+            nameTextField.becomeFirstResponder()
+        }
+
+        updateTimeLabel()
+        updateColorButton()
+
+    }
+
+    private func updateTimeLabel() {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "HH:mm"
+        timeLabel.text = formatter.string(from: datePicker.date)
+    }
+
+    private func updateColorButton() {
+        colorButton.backgroundColor = selectedColor
+    }
+
+    // MARK: - Actions
+
     @IBAction func cancelButtonTapped(_ sender: UIBarButtonItem) {
         if habitToEdit != nil {
             navigationController?.popViewController(animated: true)
@@ -43,18 +102,17 @@ class HabitViewController: UIViewController {
             dismiss(animated: true, completion: nil)
         }
     }
-    
+
     @IBAction func deleteButtonTapped(_ sender: UIButton) {
         guard let habit = habitToEdit else { return }
 
         let alert = UIAlertController(
             title: "Удалить привычку?",
-            message: "Это действие нельзя отменить.",
+            message: "Вы хотите удалить привычку «\(habit.name)»?",
             preferredStyle: .alert
         )
 
         alert.addAction(UIAlertAction(title: "Отмена", style: .cancel, handler: nil))
-
         alert.addAction(UIAlertAction(title: "Удалить", style: .destructive) { _ in
             if let index = HabitsStore.shared.habits.firstIndex(of: habit) {
                 HabitsStore.shared.habits.remove(at: index)
@@ -66,20 +124,18 @@ class HabitViewController: UIViewController {
 
         present(alert, animated: true, completion: nil)
     }
-    
-    @IBOutlet weak var colorButton: UIButton!
-    
+
     @IBAction func colorButtonTapped(_ sender: UIButton) {
         let alert = UIAlertController(title: "Выберите цвет", message: nil, preferredStyle: .actionSheet)
-        
+
         let colors: [(name: String, color: UIColor)] = [
             ("Фиолетовый", UIColor(named: "PurpleMain") ?? .purple),
             ("Синий", UIColor(named: "BlueHabit") ?? .systemBlue),
             ("Зелёный", UIColor(named: "GreenHabit") ?? .systemGreen),
             ("Оранжевый", UIColor(named: "OrangeHabit") ?? .systemOrange),
-            ("Фиолетовый 2", UIColor(named: "PurpleSecondary") ?? .systemPurple),
+            ("Фиолетовый 2", UIColor(named: "PurpleSecondary") ?? .systemPurple)
         ]
-        
+
         for (name, color) in colors {
             let action = UIAlertAction(title: name, style: .default) { [weak self] _ in
                 self?.selectedColor = color
@@ -88,64 +144,23 @@ class HabitViewController: UIViewController {
             action.setValue(color, forKey: "titleTextColor")
             alert.addAction(action)
         }
-        
+
         alert.addAction(UIAlertAction(title: "Отмена", style: .cancel, handler: nil))
-        
+
+        if let popover = alert.popoverPresentationController {
+            popover.sourceView = sender
+            popover.sourceRect = sender.bounds
+            popover.permittedArrowDirections = .any
+        }
+
         present(alert, animated: true, completion: nil)
     }
-    
-    @IBOutlet weak var timeLabel: UILabel!
-    
-    @IBOutlet weak var datePicker: UIDatePicker!
-    
+
     @IBAction func dateChanged(_ sender: UIDatePicker) {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "HH:mm"
-        let timeString = formatter.string(from: sender.date)
-        timeLabel.text = timeString
-    }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(hideKeyboard))
-        view.addGestureRecognizer(tapGesture)
-
-        deleteButton.isHidden = habitToEdit == nil
-        
-        nameTextField.layer.cornerRadius = 8
-        nameTextField.layer.borderWidth = 1
-        nameTextField.layer.borderColor = UIColor.gray.cgColor
-        
-        let now = Date()
-        datePicker.date = now
-
-        let formatter = DateFormatter()
-        formatter.dateFormat = "HH:mm"
-        let timeString = formatter.string(from: now)
-        timeLabel.text = "\(timeString)"
-        
-        if let habitToEdit = habitToEdit {
-            nameTextField.text = habitToEdit.name
-            selectedColor = habitToEdit.color
-            datePicker.date = habitToEdit.date
-            updateColorButton()
-        }
-        
-        if let habit = habitToEdit {
-            nameTextField.text = habit.name
-            datePicker.date = habit.date
-            selectedColor = habit.color
-            updateColorButton()
-        }
-        
-        nameTextField.becomeFirstResponder()
-        
-        updateColorButton()
+        updateTimeLabel()
     }
 
-    private func updateColorButton() {
-        colorButton.backgroundColor = selectedColor
+    @objc private func hideKeyboard() {
+        view.endEditing(true)
     }
-
 }

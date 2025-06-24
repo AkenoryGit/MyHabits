@@ -7,20 +7,34 @@
 
 import UIKit
 
-class InfoViewController: UIViewController {
+final class InfoViewController: UIViewController {
 
-    @IBOutlet weak var infoLabel: UILabel!
+    // MARK: - Outlets
+
+    @IBOutlet private weak var infoLabel: UILabel!
+
+    // MARK: - Lifecycle
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        configureNavigationBar()
+        configureView()
+        configureInfoLabel()
+    }
 
-        view.backgroundColor = UIColor(named: "GrayBackground")
+    // MARK: - Private Methods
+
+    private func configureNavigationBar() {
         navigationItem.title = "Информация"
-        
-        title = "Информация"
-        navigationController?.navigationBar.prefersLargeTitles = false
         navigationItem.hidesBackButton = true
+        navigationController?.navigationBar.prefersLargeTitles = false
+    }
 
+    private func configureView() {
+        view.backgroundColor = UIColor(named: "GrayBackground")
+    }
+
+    private func configureInfoLabel() {
         let fullText = """
         Привычка за 21 день
 
@@ -44,14 +58,12 @@ class InfoViewController: UIViewController {
         """
 
         let attributedText = NSMutableAttributedString(string: fullText)
-
         if let range = fullText.range(of: "Привычка за 21 день") {
             let nsRange = NSRange(range, in: fullText)
             attributedText.addAttribute(.font, value: UIFont.boldSystemFont(ofSize: 20), range: nsRange)
         }
 
         infoLabel.attributedText = attributedText
-        
         infoLabel.numberOfLines = 0
         infoLabel.textAlignment = .left
     }
